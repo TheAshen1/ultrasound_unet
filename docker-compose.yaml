@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  worker0:
+    image: theashen1/ultrasound_dist
+    command: python3 main.py --epochs 1
+    volumes:
+      - "/home/max/src/custom_unet/kaggle:/ultrasound_unet/kaggle"
+      - "/home/max/src/custom_unet/results:/ultrasound_unet/results"
+    environment:
+      TF_CONFIG: '{"cluster":{"worker":["worker0:4444","worker1:4444"]},"task":{"type":"worker","index":0}}'
+  worker1:
+    image: theashen1/ultrasound_dist
+    command: python3 main.py --epochs 1
+    volumes:
+      - "/home/max/src/ultrasound_unet/kaggle:/ultrasound_unet/kaggle"
+    environment:
+      TF_CONFIG: '{"cluster":{"worker":["worker0:4444","worker1:4444"]},"task":{"type":"worker","index":1}}'
